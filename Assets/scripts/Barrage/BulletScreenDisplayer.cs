@@ -10,7 +10,7 @@ public class BulletScreenDisplayerInfo
     [Header("组件挂接的节点")]
     public Transform Owner;
     [Header("弹幕ID")]
-  //  public GameObject Icon;
+    //  public GameObject Icon;
     [Header("文本预制")]
     public GameObject TextPrefab;  //普通弹幕
 
@@ -31,6 +31,9 @@ public class BulletScreenDisplayerInfo
     public string TextBoxNodeName;
     [Header("从屏幕一侧到另外一侧用的时间")]
     public float ScrollDuration = 8F;
+    [Header("举手从屏幕一侧到另外一侧用的时间")]
+    public float HandScrollDuration = 3f;
+
     [Header("两弹幕文本之间的最小间隔")]
     public float MinInterval = 20F;
     [Header("移动完成后的销毁延迟")]
@@ -66,6 +69,10 @@ public class BulletScreenDisplayer : MonoBehaviour
     public float ScrollDuration
     {
         get { return _info.ScrollDuration; }
+    }
+    public float HandScrollDuration
+    {
+        get { return _info.HandScrollDuration; }
     }
     private float _bulletScreenWidth;
     private float _bulletHandScreenWidth;
@@ -233,7 +240,7 @@ public class BulletScreenDisplayer : MonoBehaviour
             float l2 = newTextInfo.HandTextWidth ;
             float sentDeltaTime = newTextInfo.HandSendTime - textInfo.HandSendTime ;
 
-            var aheadTime = GetAheadTime(l1, 20);
+            var aheadTime = GetHandAheadTime(20, 11);
 
             if (sentDeltaTime >= aheadTime)
             {//fit and add.
@@ -253,7 +260,7 @@ public class BulletScreenDisplayer : MonoBehaviour
     }
 
     /// <summary>
-    /// 最后一个子弹文本在前面
+    /// 换行规则
     /// <param name="lastBulletTextWidth">最后一个子弹文本的宽度</param>
     /// <param name="newCameBulletTextWidth">新的子弹文本的宽度</param>
     /// <returns></returns>
@@ -267,15 +274,44 @@ public class BulletScreenDisplayer : MonoBehaviour
             float s2 = BulletScreenWidth;
             float v2 = (newCameBulletTextWidth + BulletScreenWidth) / _info.ScrollDuration;
             aheadTime = s1 / v1 - s2 / v2;
-          //  Debug.Log("1"+aheadTime);
+      
         }
         else
         {
             float aheadDistance = lastBulletTextWidth + _info.MinInterval;
             float v1 = (lastBulletTextWidth + BulletScreenWidth) / _info.ScrollDuration;
             aheadTime = aheadDistance / v1;
-            //Debug.Log("2" + aheadTime);
+            
         }
         return aheadTime;
     }
+
+    /// <summary>
+    /// 换行规则
+    /// <param name="lastBulletTextWidth">最后一个子弹文本的宽度</param>
+    /// <param name="newCameBulletTextWidth">新的子弹文本的宽度</param>
+    /// <returns></returns>
+    private float GetHandAheadTime(float lastBulletTextWidth, float newCameBulletTextWidth)
+    {
+        float aheadTime = 0f;
+        if (lastBulletTextWidth <= newCameBulletTextWidth)
+        {
+            float s1 = lastBulletTextWidth + BulletHandScreenWidth + _info.MinInterval;
+            float v1 = (lastBulletTextWidth + BulletHandScreenWidth) / _info.HandScrollDuration;
+            float s2 = BulletHandScreenWidth;
+            float v2 = (newCameBulletTextWidth + BulletHandScreenWidth) / _info.HandScrollDuration;
+            aheadTime = s1 / v1 - s2 / v2;
+
+        }
+        else
+        {
+            float aheadDistance = lastBulletTextWidth + _info.MinInterval;
+            float v1 = (lastBulletTextWidth + BulletHandScreenWidth) / _info.HandScrollDuration;
+            aheadTime = aheadDistance / v1;
+
+        }
+        return aheadTime;
+    }
+
+
 }

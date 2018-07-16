@@ -204,18 +204,31 @@ public class BulletScreenTextElement : MonoBehaviour
     }
     private void StartMove()
     {
-       
-        //make sure the text is active.
-        //the default ease of DoTewwen is not Linear.
-        transform.DOLocalMoveX(_endPos.x, _displayer.ScrollDuration).OnComplete(OnTweenFinished).SetEase(Ease.Linear);
+        if (_textContent.Contains("1"))
+        {
+            //make sure the text is active.
+            //the default ease of DoTewwen is not Linear.
+            transform.DOLocalMoveX(_endPos.x, _displayer.ScrollDuration).OnComplete(OnTweenFinished).SetEase(Ease.Linear);
+        }
+        else
+        {
+            //make sure the text is active.
+            //the default ease of DoTewwen is not Linear.
+            transform.DOLocalMoveX(_endPos.x, _displayer.HandScrollDuration).OnComplete(OnTweenFinished).SetEase(Ease.Linear);
+        }
+
     }
     private void OnTweenFinished()
     {
         if (_textContent.Contains("2"))
         {
-           Destroy(gameObject, 5);
+            Destroy(gameObject, 2);
+            return;
         }
-       Destroy(gameObject, _displayer.KillBulletTextDelay);
+      
+            Destroy(gameObject, _displayer.KillBulletTextDelay);
+        
+      
     }
 }
 

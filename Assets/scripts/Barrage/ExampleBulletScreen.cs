@@ -69,13 +69,7 @@ public class ExampleBulletScreen : MonoBehaviour {
           strDanMu = "";   
         
     }
-    //public void ControlHandText(string text)
-    //{
-    //    GameObject go = Instantiate(HandTextPrefab) as GameObject;
-    //    go.transform.SetParent(HandTextParent);
-    //    HandTextPrefab.GetComponentInChildren<Text>().text = text;
-    //    Destroy(go, 5);
-    //}
+   
 
     private void  GetText()
     {
